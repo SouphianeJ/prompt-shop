@@ -111,7 +111,8 @@ const PromptForm: React.FC<PromptFormProps> = ({ promptId }) => {
   );
 };
 
-export default PromptForm;'use client';
+export default PromptForm;
+/*'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -206,4 +207,4 @@ const PromptForm: React.FC<PromptFormProps> = ({ promptId }) => {
   );
 };
 
-export default PromptForm;
+export default PromptForm;*/
