@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-white text-dark-gray antialiased">
+      <body className="antialiased"> {/* Styles from globals.css will apply (bg-dark-gray text-light-gray) */}
         <Layout>{children}</Layout>
       </body>
     </html>
@@ -24,8 +24,8 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="container mx-auto p-4">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold">Prompt Gallery</h1>
-        <p className="text-gray-600">
+        <h1 className="text-4xl font-bold text-neon-green uppercase tracking-wider">Prompt Gallery</h1> {/* Neon color, larger, uppercase for brutalist feel */}
+        <p className="text-gray-400 mt-1"> {/* Lighter gray for subtitle */}
           Create, share, and discover amazing prompts.
         </p>
       </header>

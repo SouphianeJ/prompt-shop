@@ -1,33 +1,40 @@
 import { NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
+import type { Prompt } from '@/types/prompt';
 
-// Placeholder data - replace with database interactions
-const prompts = [
-  { id: '1', title: 'Prompt 1', content: 'Content 1', tags: ['AI'] },
-  { id: '2', title: 'Prompt 2', content: 'Content 2', tags: ['Marketing'] },
+// Placeholder data - 'let' allows modification.
+let prompts: Prompt[] = [
+  { id: uuidv4(), title: 'Futuristic Cityscape', content: 'Describe a sprawling metropolis in the year 2242, focusing on its unique transportation and architecture.', tags: ['Sci-Fi', 'Worldbuilding'] },
+  { id: uuidv4(), title: 'Minimalist Logo Design', content: 'Generate three concepts for a minimalist logo for a sustainable coffee brand.', tags: ['Design', 'Branding'] },
 ];
 
-// GET all prompts
 export async function GET() {
   return NextResponse.json(prompts);
 }
 
-// POST a new prompt
 export async function POST(request: Request) {
-  const { title, content, tags } = await request.json();
+  try {
+    const body = await request.json();
+    const { title, content, tags } = body;
 
-  // Basic validation
-  if (!title || !content) {
-    return new NextResponse('Missing required fields', { status: 400 });
+    if (!title || !content) {
+      return NextResponse.json({ message: 'Missing required fields: title and content are required.' }, { status: 400 });
+    }
+    if (!Array.isArray(tags) || !tags.every(tag => typeof tag === 'string')) {
+        return NextResponse.json({ message: 'Tags must be an array of strings.' }, { status: 400 });
+    }
+
+    const newPrompt: Prompt = {
+      id: uuidv4(),
+      title,
+      content,
+      tags: tags.map((tag: string) => tag.trim()).filter((tag: string) => tag !== ''), // Clean up tags
+    };
+
+    prompts.push(newPrompt);
+    return NextResponse.json(newPrompt, { status: 201 });
+  } catch (error) {
+    console.error('API POST Error:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
-
-  const newPrompt = {
-    id: String(prompts.length + 1), // Simple ID generation - replace with UUID or database ID
-    title,
-    content,
-    tags,
-  };
-
-  prompts.push(newPrompt);
-
-  return NextResponse.json(newPrompt, { status: 201 });
 }
