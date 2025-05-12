@@ -1,6 +1,6 @@
 // app/api/prompts/[id]/route.ts
 import { NextResponse } from 'next/server';
-import { getPromptById, updatePrompt, deletePromptById } from '@/lib/prompts-fs';
+import { getPromptById, updatePrompt, deletePromptById } from './lib/prompts-fs';
 import type { Prompt } from '@/types/prompt'; // 
 
 interface Params {
