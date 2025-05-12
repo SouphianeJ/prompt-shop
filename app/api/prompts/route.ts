@@ -1,6 +1,6 @@
 // app/api/prompts/route.ts
 import { NextResponse } from 'next/server';
-import { getAllPrompts, savePrompt } from 'lib/prompts-fs'; // Updated import
+import { getAllPrompts, savePrompt } from '@/lib/prompt-fs'; // Updated import
 import type { Prompt } from '@/types/prompt'; // 
 
 export async function GET() {
