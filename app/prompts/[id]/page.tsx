@@ -2,8 +2,9 @@
 'use client'; // Keep if you have client-side interactions, or convert to RSC
 
 import React, { useEffect, useState } from 'react';
-import { Prompt } from '@/types/prompt'; // 
-import Link from 'next/link'; // For edit button
+import { Prompt } from '@/types/prompt';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 interface Props {
   params: { id: string };
@@ -14,6 +15,8 @@ const PromptDetailPage: React.FC<Props> = ({ params }) => {
   const [prompt, setPrompt] = useState<Prompt | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false); // State for delete operation
+  const router = useRouter(); // Initialize router
 
   useEffect(() => {
     if (id) {
@@ -38,20 +41,57 @@ const PromptDetailPage: React.FC<Props> = ({ params }) => {
     }
   }, [id]);
 
+  const handleDelete = async () => {
+    if (!prompt) return;
+
+    // Confirmation dialog
+    if (window.confirm(`Are you sure you want to delete the prompt "${prompt.title}"?`)) {
+      setIsDeleting(true);
+      setError(null);
+      try {
+        const res = await fetch(`/api/prompts/${prompt.id}`, {
+          method: 'DELETE',
+        });
+
+        if (res.ok) {
+          // Navigate to prompts list and refresh
+          router.push('/prompts');
+          router.refresh(); // Ensures data is refetched on the list page
+        } else {
+          const errorData = await res.json().catch(() => ({ message: 'Failed to delete prompt. Server returned an error.' }));
+          throw new Error(errorData.message || 'Failed to delete prompt.');
+        }
+      } catch (err: any) {
+        setError(err.message || 'An unexpected error occurred while deleting.');
+        setIsDeleting(false);
+      }
+    }
+  };
+
   if (loading) return <p className="text-center text-light-gray mt-8">Loading prompt details...</p>;
-  if (error) return <p className="text-center text-red-400 mt-8">Error: {error}</p>;
+  if (error && !isDeleting) return <p className="text-center text-red-400 mt-8">Error: {error}</p>; // Show general errors if not deleting
   if (!prompt) return <p className="text-center text-gray-500 mt-8">Prompt not found.</p>;
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      {error && isDeleting && <p className="text-center text-red-400 my-4">Error deleting prompt: {error}</p>} {/* Show delete specific error */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
         <h2 className="text-3xl font-bold text-neon-green">{prompt.title}</h2>
-        <Link
-            href={`/prompts/${prompt.id}/edit`}
-            className="bg-neon-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors"
-        >
-            Edit Prompt
-        </Link>
+        <div className="flex gap-2 flex-wrap">
+          <Link
+              href={`/prompts/${prompt.id}/edit`}
+              className="bg-neon-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors text-sm sm:text-base"
+          >
+              Edit Prompt
+          </Link>
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md transition-colors disabled:opacity-50 text-sm sm:text-base"
+          >
+            {isDeleting ? 'Deleting...' : 'Delete Prompt'}
+          </button>
+        </div>
       </div>
       <p className="mb-4 text-lg text-gray-300 whitespace-pre-wrap">{prompt.content}</p>
       {prompt.tags && prompt.tags.length > 0 && (
@@ -66,8 +106,6 @@ const PromptDetailPage: React.FC<Props> = ({ params }) => {
           </div>
         </div>
       )}
-      {/* Add a delete button if desired */}
-      {/* <button onClick={handleDelete} className="...">Delete</button> */}
     </div>
   );
 };
