@@ -15,7 +15,7 @@
           "./app/src/firebase/*"
         ],
         "@components/*": [
-          "./app/components/*"
+          "./components/*"
         ],
         "@ai/*": [
           "./app/src/ai/*"
@@ -24,13 +24,13 @@
           "./app/src/github/*"
         ],
         "@hooks/*": [
-          "./app/hooks/*"
+          "./hooks/*"
         ],
         "@api/*": [
           "./app/api/*"
         ],
         "@types/*": [
-          "./app/types/*"
+          "./types/*"
         ]
       },
       "lib": [
