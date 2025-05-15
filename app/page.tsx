@@ -1,36 +1,63 @@
 'use client';
 
+import { useState, useMemo } from 'react'; // Import useMemo
 import PromptList from '@/components/PromptList';
 import SearchBar from '@/components/SearchBar';
 import TagFilter from '@/components/TagFilter';
+import Link from 'next/link';
 import usePrompts from '@/hooks/usePrompts';
-import { Prompt } from '@/types/prompt';
-import Link from 'next/link'; // Import Link
+import { Prompt } from '@/types/prompt'; // Import Prompt type
 
-export default function Home() {
+export default function HomePage() {
   const { prompts, loading, error } = usePrompts();
-  
-  const allTags = Array.from(new Set(prompts.flatMap(p => p.tags)));
+  const [selectedTag, setSelectedTag] = useState('All'); // State for the selected tag
+
+  // Extract unique tags for the filter.
+  const allTags = useMemo(() => {
+    return Array.from(new Set(prompts.flatMap(p => p.tags)));
+  }, [prompts]);
+
+  // Callback function for TagFilter
+  const handleTagSelect = (tag: string) => {
+    setSelectedTag(tag);
+  };
+
+  // Filter prompts based on the selected tag
+  const filteredPrompts = useMemo(() => {
+    if (selectedTag === 'All') {
+      return prompts;
+    }
+    return prompts.filter(prompt => prompt.tags.includes(selectedTag));
+  }, [prompts, selectedTag]);
 
   return (
-    <div className="space-y-6"> {/* Added spacing */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
-        <div className="w-full sm:flex-grow">
-          <SearchBar />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-4 gap-4">
+        <div className="w-full">
+          <SearchBar /> {/* SearchBar logic will be separate for now */}
         </div>
-        <Link
-          href="/prompts/new"
-          className="w-full sm:w-auto bg-neon-blue text-white font-bold py-2 px-6 rounded-md hover:bg-blue-700 transition-colors duration-150 whitespace-nowrap text-center"
-        >
+        <Link href="/prompts/new" className="button primary">
           Add Prompt
         </Link>
       </div>
-      <TagFilter tags={allTags} />
       
-      {loading && <p className="text-center text-light-gray mt-8">Loading prompts...</p>}
-      {error && <p className="text-center text-red-400 mt-8">Error: {error}</p>}
-      {!loading && !error && <PromptList prompts={prompts} />}
-      {!loading && !error && prompts.length === 0 && <p className="text-center text-gray-500 mt-8">Welcome! No prompts found. Get started by adding a new one.</p>}
+      <TagFilter tags={allTags} onTagSelect={handleTagSelect} />
+      
+      {loading && <p className="text-center mt-4">Loading prompts...</p>}
+      {error && <p className="text-center error-message mt-4">Error: {error}</p>}
+      
+      {!loading && !error && <PromptList prompts={filteredPrompts} />}
+      
+      {!loading && !error && prompts.length > 0 && filteredPrompts.length === 0 && (
+        <p className="text-center mt-4">
+          No prompts found for the tag "{selectedTag}".
+        </p>
+      )}
+      {!loading && !error && prompts.length === 0 && (
+        <p className="text-center mt-4">
+          No prompts yet. Why not add one?
+        </p>
+      )}
     </div>
   );
 }

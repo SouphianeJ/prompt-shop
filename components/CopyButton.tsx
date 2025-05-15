@@ -20,8 +20,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ text }) => {
   };
 
   return (
-    <button
-      className="bg-neon-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    <button       
       onClick={handleCopyClick}
       disabled={isCopied}
     >

@@ -8,17 +8,17 @@ interface PromptCardProps {
 
 const PromptCard: React.FC<PromptCardProps> = ({ prompt }) => {
   return (
-    <div className="border border-gray-700 rounded-md p-4 mb-4 hover:border-neon-blue transition-colors duration-150"> {/* Subtle border, neon on hover */}
-      <h3 className="text-xl font-semibold mb-2">
+    <div className="card">
+      <h3 className="card-title">
         <Link href={`/prompts/${prompt.id}`} className="text-neon-blue hover:underline">
           {prompt.title}
         </Link>
       </h3>
-      <p className="mb-3 text-gray-400 line-clamp-3">{prompt.content}</p> {/* Slightly dimmer text, line-clamp for brevity */}
-      <div className="flex items-center justify-between">
-        <div className="flex flex-wrap gap-2"> {/* Use flex-wrap and gap for tags */}
+      <p className="mb-3">{prompt.content}</p> {/* Slightly dimmer text, line-clamp for brevity */}
+      <div className="card-footer flex justify-between items-center">
+        <div className="tag-list"> {/* Use flex-wrap and gap for tags */}
           {prompt.tags.map((tag) => (
-            <span key={tag} className="inline-block bg-gray-700 rounded-full px-3 py-1 text-xs font-semibold text-neon-green"> {/* Adjusted tag style - smaller, darker bg */}
+            <span key={tag} className="tag">
               #{tag}
             </span>
           ))}

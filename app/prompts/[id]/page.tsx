@@ -80,15 +80,12 @@ const PromptDetailPage: React.FC<Props> = ({ params }) => {
         <div className="flex gap-2 flex-wrap">
           <Link
               href={`/prompts/${prompt.id}/edit`}
-              className="bg-neon-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors text-sm sm:text-base"
-          >
+                        >
               Edit Prompt
           </Link>
-          <button
-            onClick={handleDelete}
+          <button             onClick={handleDelete}
             disabled={isDeleting}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md transition-colors disabled:opacity-50 text-sm sm:text-base"
-          >
+                      >
             {isDeleting ? 'Deleting...' : 'Delete Prompt'}
           </button>
         </div>

@@ -1,5 +1,6 @@
+// filepath: c:\Users\s.jender\github public proj\prompt-shop\app\layout.tsx
 import type { Metadata } from 'next';
-import './globals.css';
+import './globals.css'; // This import remains
 
 export const metadata: Metadata = {
   title: 'Prompt Shop',
@@ -13,23 +14,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased"> {/* Styles from globals.css will apply (bg-dark-gray text-light-gray) */}
-        <Layout>{children}</Layout>
+      <body> {/* Body tag gets styles from globals.css directly */}
+        <div className="site-wrapper"> {/* Optional: for overall structure if needed */}
+          <header className="site-header">
+            <div className="container">
+              <a href="/" className="logo">PromptShop</a>
+              <nav>
+                <a href="/prompts">All Prompts</a>
+                {/* Add other nav links here */}
+              </nav>
+            </div>
+          </header>
+          <main className="container">
+            {children}
+          </main>
+          <footer className="site-footer">
+            <p>&copy; {new Date().getFullYear()} PromptShop. All rights reserved.</p>
+          </footer>
+        </div>
       </body>
     </html>
   );
 }
 
-function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="container mx-auto p-4">
-      <header className="mb-8">
-        <h1 className="text-4xl font-bold text-neon-green uppercase tracking-wider">Prompt Gallery</h1> {/* Neon color, larger, uppercase for brutalist feel */}
-        <p className="text-gray-400 mt-1"> {/* Lighter gray for subtitle */}
-          Create, share, and discover amazing prompts.
-        </p>
-      </header>
-      <main>{children}</main>
-    </div>
-  );
-}
+// The separate Layout component might not be needed if you structure directly in RootLayout
+// or you can adapt it to use these new classes.
+// For instance, the h1 and p in your original Layout component would get styles from the global H1/P rules.

@@ -81,20 +81,19 @@ const PromptForm: React.FC<PromptFormProps> = ({ promptId }) => {
   };
   
   if (isLoadingData) {
-    return <p className="text-center text-light-gray mt-8">Loading form data...</p>;
+    return <p className="text-center">Loading form data...</p>;
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
-      {error && <div className="my-4 p-3 bg-red-900 text-red-200 border border-red-700 rounded-md">{error}</div>}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && <div className="error-message">{error}</div>}
       <div>
-        <label htmlFor="title" className="block text-sm font-bold mb-1 text-neon-green">
+        <label htmlFor="title" >
           Title:
         </label>
         <input
           type="text"
           id="title"
-          className="shadow-sm appearance-none border rounded-md w-full py-2 px-3 leading-tight bg-gray-700 border-gray-600 text-light-gray placeholder-gray-400 focus:ring-2 focus:ring-neon-blue focus:border-neon-blue focus:outline-none" // 
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
@@ -108,7 +107,6 @@ const PromptForm: React.FC<PromptFormProps> = ({ promptId }) => {
         <textarea
           id="content"
           rows={8} // Increased rows
-          className="shadow-sm appearance-none border rounded-md w-full py-2 px-3 leading-tight bg-gray-700 border-gray-600 text-light-gray placeholder-gray-400 focus:ring-2 focus:ring-neon-blue focus:border-neon-blue focus:outline-none" // 
           value={content}
           onChange={(e) => setContent(e.target.value)}
           required
@@ -122,17 +120,16 @@ const PromptForm: React.FC<PromptFormProps> = ({ promptId }) => {
         <input
           type="text"
           id="tags"
-          className="shadow-sm appearance-none border rounded-md w-full py-2 px-3 leading-tight bg-gray-700 border-gray-600 text-light-gray placeholder-gray-400 focus:ring-2 focus:ring-neon-blue focus:border-neon-blue focus:outline-none" // 
           value={tags}
           onChange={(e) => setTags(e.target.value)}
           disabled={isSubmitting}
         />
       </div>
       <div>
-        <button
-          type="submit"
-          className="w-full bg-neon-blue hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:shadow-outline disabled:opacity-70 transition-colors"
-          disabled={isSubmitting || isLoadingData}
+        <button           
+        type="submit"   
+        className="button primary" 
+        disabled={isSubmitting || isLoadingData}
         >
           {isSubmitting ? (promptId ? 'Updating...' : 'Creating...') : (promptId ? 'Update Prompt' : 'Create Prompt')}
         </button>

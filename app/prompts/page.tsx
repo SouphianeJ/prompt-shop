@@ -21,8 +21,7 @@ export default function PromptsPage() {
         </div>
         <Link
           href="/prompts/new"
-          className="w-full sm:w-auto bg-neon-blue text-white font-bold py-2 px-6 rounded-md hover:bg-blue-700 transition-colors duration-150 whitespace-nowrap text-center"
-        >
+                  >
           Add Prompt
         </Link>
       </div>
