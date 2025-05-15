@@ -5,18 +5,37 @@ import React, { useEffect, useState } from 'react';
 import { Prompt } from '@/types/prompt';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // Import useRouter
-
+import { useAuth } from '@/app/context/AuthContext'; // Import useAuth
 interface Props {
   params: { id: string };
 }
 
 const PromptDetailPage: React.FC<Props> = ({ params }) => {
+
+  const { user, loadingAuth } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loadingAuth && !user) {
+      router.push('/auth');
+    }
+  }, [user, loadingAuth, router]);
+
+  if (loadingAuth) {
+    return <p>Chargement...</p>; // Or a loading spinner
+  }
+
+  if (!user) {
+    // This will likely not be reached if the redirect happens,
+    // but it's good practice for clarity or if redirect is delayed.
+    return <p>Redirection vers la page de connexion...</p>;
+  }
+
   const { id } = params;
   const [prompt, setPrompt] = useState<Prompt | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false); // State for delete operation
-  const router = useRouter(); // Initialize router
 
   useEffect(() => {
     if (id) {
